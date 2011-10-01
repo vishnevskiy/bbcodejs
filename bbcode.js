@@ -504,21 +504,21 @@
   _START_NEWLINE_RE = /^\r?\n/;
   window.BBCodeParser = (function() {
     function BBCodeParser(allowed_tags) {
-      var k, tag, v, _i, _len;
+      var name, tag, _i, _len;
       if (allowed_tags == null) {
         allowed_tags = null;
       }
       this.tags = {};
       if (!allowed_tags) {
-        for (k in BBCODE_TAGS) {
-          v = BBCODE_TAGS[k];
-          this.tags[k] = v;
+        for (name in BBCODE_TAGS) {
+          tag = BBCODE_TAGS[name];
+          this.register_tag(name, tag);
         }
       } else {
         for (_i = 0, _len = allowed_tags.length; _i < _len; _i++) {
-          tag = allowed_tags[_i];
-          if (__indexOf.call(BBCODE_TAGS, tag) >= 0) {
-            this.tags[tag] = BBCODE_TAGS[tag];
+          name = allowed_tags[_i];
+          if (__indexOf.call(BBCODE_TAGS, name) >= 0) {
+            this.register_tag(name, BBCODE_TAGS[name]);
           }
         }
       }
@@ -560,7 +560,8 @@
       return params;
     };
     BBCodeParser.prototype._create_text_node = function(parent, text) {
-      if (parent.children.length && parent.children.slice(-1)[0].STRIP_OUTER) {
+      var _ref;
+      if ((_ref = parent.children.slice(-1)[0]) != null ? _ref.STRIP_OUTER : void 0) {
         text = text.replace(_START_NEWLINE_RE, '');
       }
       return new BBCodeTag(this.renderer, {

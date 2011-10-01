@@ -7,12 +7,12 @@ class window.BBCodeParser
     @tags = {}
 
     if not allowed_tags
-      for k, v of BBCODE_TAGS
-        @tags[k] = v
+      for name, tag of BBCODE_TAGS
+        @register_tag(name, tag)
     else
-      for tag in allowed_tags
-        if tag in BBCODE_TAGS
-          @tags[tag] = BBCODE_TAGS[tag]
+      for name in allowed_tags
+        if name in BBCODE_TAGS
+          @register_tag(name, BBCODE_TAGS[name])
 
     @renderer = new BBCodeRenderer()
 
@@ -52,7 +52,7 @@ class window.BBCodeParser
     return params
 
   _create_text_node: (parent, text) ->
-    if parent.children.length and parent.children.slice(-1)[0].STRIP_OUTER
+    if parent.children.slice(-1)[0]?.STRIP_OUTER
       text = text.replace(_START_NEWLINE_RE, '')
 
     new BBCodeTag(@renderer,
