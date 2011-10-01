@@ -1,7 +1,7 @@
 JS_FILES = \
-    src/js/renderer.js \
-    src/js/tags.js \
-    src/js/parser.js
+	src/js/renderer.js \
+   	src/js/tags.js \
+   	src/js/parser.js
 
 all: bbcode.min.js
 
