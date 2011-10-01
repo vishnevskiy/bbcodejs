@@ -24,16 +24,16 @@ class window.BBCodeRenderer
       linkify: true
 
   context: (context, func) ->
-    new_options = {}
+    newOptions = {}
 
     for k, v of @options
-      new_options[k] = v
+      newOptions[k] = v
 
     for k, v of context
-      new_options[k] = v
+      newOptions[k] = v
       
     @_contexts.push(@options)
-    @options = new_options
+    @options = newOptions
     v = func()
     @options = @_contexts.pop()
     return v
@@ -60,12 +60,12 @@ class window.BBCodeRenderer
   strip: (text) ->
     text.replace(/^\s+|\s+$/g, '')
 
-  cosmetic_replace: (value) ->
+  cosmeticReplace: (value) ->
     value.replace _COSMETIC_RE, (match...) ->
       item = match[0]
       return _COSMETIC_DICT[item] or item
 
-  html_attributes: (attributes) ->
+  htmlAttributes: (attributes) ->
     if not attributes 
       return ''
 

@@ -10,42 +10,42 @@
   _TOKEN_RE = /(\[\/?.+?\])/;
   _START_NEWLINE_RE = /^\r?\n/;
   window.BBCodeParser = (function() {
-    function BBCodeParser(allowed_tags) {
+    function BBCodeParser(allowedTags) {
       var name, tag, _i, _len;
-      if (allowed_tags == null) {
-        allowed_tags = null;
+      if (allowedTags == null) {
+        allowedTags = null;
       }
       this.tags = {};
-      if (!allowed_tags) {
+      if (!allowedTags) {
         for (name in BBCODE_TAGS) {
           tag = BBCODE_TAGS[name];
-          this.register_tag(name, tag);
+          this.registerTag(name, tag);
         }
       } else {
-        for (_i = 0, _len = allowed_tags.length; _i < _len; _i++) {
-          name = allowed_tags[_i];
+        for (_i = 0, _len = allowedTags.length; _i < _len; _i++) {
+          name = allowedTags[_i];
           if (__indexOf.call(BBCODE_TAGS, name) >= 0) {
-            this.register_tag(name, BBCODE_TAGS[name]);
+            this.registerTag(name, BBCODE_TAGS[name]);
           }
         }
       }
       this.renderer = new BBCodeRenderer();
     }
-    BBCodeParser.prototype.register_tag = function(name, tag) {
+    BBCodeParser.prototype.registerTag = function(name, tag) {
       return this.tags[name] = tag;
     };
-    BBCodeParser.prototype._parse_params = function(token) {
-      var c, key, params, skip_next, target, terminate, value, _i, _len;
+    BBCodeParser.prototype._parseParams = function(token) {
+      var c, key, params, skipNext, target, terminate, value, _i, _len;
       params = [];
       if (token) {
         target = key = [];
         value = [];
         terminate = ' ';
-        skip_next = false;
+        skipNext = false;
         for (_i = 0, _len = token.length; _i < _len; _i++) {
           c = token[_i];
-          if (skip_next) {
-            skip_next = false;
+          if (skipNext) {
+            skipNext = false;
           } else if (target === key && c === '=') {
             target = value;
           } else if (!value.length && c === '"') {
@@ -55,7 +55,7 @@
           } else {
             params.push([key.join('').toLowerCase(), value.join('')]);
             if (!_SPACE_RE.test(terminate)) {
-              skip_next = true;
+              skipNext = true;
             }
             target = key = [];
             value = [];
@@ -66,7 +66,7 @@
       }
       return params;
     };
-    BBCodeParser.prototype._create_text_node = function(parent, text) {
+    BBCodeParser.prototype._createTextNode = function(parent, text) {
       var _ref;
       if ((_ref = parent.children.slice(-1)[0]) != null ? _ref.STRIP_OUTER : void 0) {
         text = text.replace(_START_NEWLINE_RE, '');
@@ -77,55 +77,55 @@
       });
     };
     BBCodeParser.prototype.parse = function(bbcode) {
-      var cls, current, params, root, tag, tag_name, token, tokens;
+      var cls, current, params, root, tag, tagName, token, tokens;
       current = root = new BBCodeTag(this.renderer);
       tokens = bbcode.split(_TOKEN_RE);
       while (tokens.length) {
         token = tokens.shift();
         if (token.match(_TOKEN_RE)) {
-          params = this._parse_params(token.slice(1, -1));
-          tag_name = params[0][0];
-          if (__indexOf.call(current.CLOSED_BY, tag_name) >= 0) {
+          params = this._parseParams(token.slice(1, -1));
+          tagName = params[0][0];
+          if (__indexOf.call(current.CLOSED_BY, tagName) >= 0) {
             tokens.unshift(token);
-            tag_name = '/' + current.name;
+            tagName = '/' + current.name;
             params = [];
           }
-          if (tag_name[0] === '/') {
-            tag_name = tag_name.slice(1);
-            if (!(tag_name in this.tags)) {
-              this._create_text_node(current, token);
+          if (tagName[0] === '/') {
+            tagName = tagName.slice(1);
+            if (!(tagName in this.tags)) {
+              this._createTextNode(current, token);
               continue;
             }
-            if (current.name === tag_name) {
+            if (current.name === tagName) {
               current = current.parent;
             }
           } else {
-            cls = this.tags[tag_name];
+            cls = this.tags[tagName];
             if (!cls) {
-              this._create_text_node(current, token);
+              this._createTextNode(current, token);
               continue;
             }
             tag = new cls(this.renderer, {
-              name: tag_name,
+              name: tagName,
               parent: current,
               params: params
             });
-            if (!tag.SELF_CLOSE && (__indexOf.call(tag.CLOSED_BY, tag_name) < 0 || current.name !== tag_name)) {
+            if (!tag.SELF_CLOSE && (__indexOf.call(tag.CLOSED_BY, tagName) < 0 || current.name !== tagName)) {
               current = tag;
             }
           }
         } else {
-          this._create_text_node(current, token);
+          this._createTextNode(current, token);
         }
       }
       return root;
     };
-    BBCodeParser.prototype.to_html = function(bbcode, prettify) {
+    BBCodeParser.prototype.toHTML = function(bbcode, prettify) {
       var html;
       if (prettify == null) {
         prettify = false;
       }
-      return html = this.parse(bbcode).to_html();
+      return html = this.parse(bbcode).toHTML();
     };
     return BBCodeParser;
   })();

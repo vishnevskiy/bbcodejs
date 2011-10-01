@@ -33,19 +33,19 @@
       };
     }
     BBCodeRenderer.prototype.context = function(context, func) {
-      var k, new_options, v, _ref;
-      new_options = {};
+      var k, newOptions, v, _ref;
+      newOptions = {};
       _ref = this.options;
       for (k in _ref) {
         v = _ref[k];
-        new_options[k] = v;
+        newOptions[k] = v;
       }
       for (k in context) {
         v = context[k];
-        new_options[k] = v;
+        newOptions[k] = v;
       }
       this._contexts.push(this.options);
-      this.options = new_options;
+      this.options = newOptions;
       v = func();
       this.options = this._contexts.pop();
       return v;
@@ -74,7 +74,7 @@
     BBCodeRenderer.prototype.strip = function(text) {
       return text.replace(/^\s+|\s+$/g, '');
     };
-    BBCodeRenderer.prototype.cosmetic_replace = function(value) {
+    BBCodeRenderer.prototype.cosmeticReplace = function(value) {
       return value.replace(_COSMETIC_RE, function() {
         var item, match;
         match = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
@@ -82,7 +82,7 @@
         return _COSMETIC_DICT[item] || item;
       });
     };
-    BBCodeRenderer.prototype.html_attributes = function(attributes) {
+    BBCodeRenderer.prototype.htmlAttributes = function(attributes) {
       var k, v;
       if (!attributes) {
         return '';

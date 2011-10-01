@@ -26,7 +26,7 @@ class window.BBCodeTag
 
     @children = []
 
-  get_content: (raw=false) ->
+  getContent: (raw=false) ->
     pieces = []
 
     if @text
@@ -36,7 +36,7 @@ class window.BBCodeTag
         if @renderer.options['linkify']
           text = @renderer.linkify(text)
 
-        text = @renderer.cosmetic_replace(text.replace(_NEWLINE_RE, _LINE_BREAK))
+        text = @renderer.cosmeticReplace(text.replace(_NEWLINE_RE, _LINE_BREAK))
 
       pieces.push(text)
 
@@ -44,12 +44,12 @@ class window.BBCodeTag
 
     for child in children
       if raw
-        pieces.push(child.to_text())
+        pieces.push(child.toText())
       else
         if @DISCARD_TEXT and child.name is null
           continue
 
-        pieces.push(child.to_html())
+        pieces.push(child.toHTML())
 
     content = pieces.join('')
 
@@ -66,7 +66,7 @@ class window.BBCodeTag
 
     return content
 
-  to_text: (content_as_html=false) ->
+  toText: (contentAsHTML=false) ->
     pieces = []
 
     if @name isnt null
@@ -80,18 +80,18 @@ class window.BBCodeTag
       else
         pieces.push("[#{@name}]")
 
-    pieces.push(@get_content(not content_as_html))
+    pieces.push(@getContent(not contentAsHTML))
 
     if @name isnt null and @name not in @CLOSED_BY
       pieces.push("[/#{@name}]")
 
     pieces.join('')
 
-  _to_html: ->
-    [@to_text(true)]
+  _toHTML: ->
+    [@toText(true)]
 
-  to_html: ->
-    @_to_html().join('')
+  toHTML: ->
+    @_toHTML().join('')
 
 class CodeBBCodeTag extends BBCodeTag
   constructor: ->
@@ -104,21 +104,21 @@ class CodeBBCodeTag extends BBCodeTag
     if not @_inline
       @STRIP_OUTER = true
 
-  _to_html: ->
+  _toHTML: ->
       if @_inline
-          return ['<code>', @get_content(true), '</code>']
+          return ['<code>', @getContent(true), '</code>']
 
       lang = @params['lang'] or @params[@name]
 
       if lang
-          ["<pre class=\"prettyprint lang-#{lang}\">", @get_content(true), '</pre>']
+          ["<pre class=\"prettyprint lang-#{lang}\">", @getContent(true), '</pre>']
       else
-          ['<pre>', @get_content(true), '</pre>']
+          ['<pre>', @getContent(true), '</pre>']
 
 class ImageBBCodeTag extends BBCodeTag
-  _to_html: ->
+  _toHTML: ->
     attributes =
-      src: @renderer.strip(@get_content(true))
+      src: @renderer.strip(@getContent(true))
 
     if 'width' of @params
       attributes['width'] = @params['width']
@@ -126,33 +126,33 @@ class ImageBBCodeTag extends BBCodeTag
     if 'height' of @params
       attributes['height'] = @params['height']
 
-    ["<img #{@renderer.html_attributes(attributes)} />"]
+    ["<img #{@renderer.htmlAttributes(attributes)} />"]
 
 class SizeBBCodeTag extends BBCodeTag
-  _to_html: ->
+  _toHTML: ->
     size = @params['size']
 
     if isNaN(size)
-      return @get_content()
+      return @getContent()
 
-    ["<span style=\"font-size:#{size}px\">", @get_content(), '</span>']
+    ["<span style=\"font-size:#{size}px\">", @getContent(), '</span>']
 
 class ColorBBCodeTag extends BBCodeTag
-  _to_html: ->
+  _toHTML: ->
     color = @params['color']
 
     if not color
-      return @get_content()
+      return @getContent()
 
-    ["<span style=\"color:#{color}\">", @get_content(), '</span>']
+    ["<span style=\"color:#{color}\">", @getContent(), '</span>']
 
 class CenterBBCodeTag extends BBCodeTag
-  _to_html: ->
-    ['<div style="text-align:center;">', @get_content(), '</div>']
+  _toHTML: ->
+    ['<div style="text-align:center;">', @getContent(), '</div>']
 
 class RightBBCodeTag extends BBCodeTag
-  _to_html: ->
-    ['<div style="float:right;">', @get_content(), '</div>']
+  _toHTML: ->
+    ['<div style="float:right;">', @getContent(), '</div>']
 
 class HorizontalRuleBBCodeTag extends BBCodeTag
   constructor: ->
@@ -161,7 +161,7 @@ class HorizontalRuleBBCodeTag extends BBCodeTag
     @SELF_CLOSE = true
     @STRIP_OUTER = true
 
-  _to_html: ->
+  _toHTML: ->
     ['<hr />']
 
 class ListBBCodeTag extends BBCodeTag
@@ -171,17 +171,17 @@ class ListBBCodeTag extends BBCodeTag
     @STRIP_INNER = true
     @STRIP_OUTER = true
 
-  _to_html: ->
-    list_type = @params['list']
+  _toHTML: ->
+    listType = @params['list']
 
-    if list_type is '1'
-        ['<ol>', @get_content(), '</ol>']
-    else if list_type is 'a'
-        ['<ol style="list-style-type:lower-alpha;">', @get_content(), '</ol>']
-    else if list_type == 'A'
-        ['<ol style="list-style-type:upper-alpha;">', @get_content(), '</ol>']
+    if listType is '1'
+        ['<ol>', @getContent(), '</ol>']
+    else if listType is 'a'
+        ['<ol style="list-style-type:lower-alpha;">', @getContent(), '</ol>']
+    else if listType == 'A'
+        ['<ol style="list-style-type:upper-alpha;">', @getContent(), '</ol>']
     else
-        ['<ul>', @get_content(), '</ul>']
+        ['<ul>', @getContent(), '</ul>']
 
 class ListItemBBCodeTag extends BBCodeTag
   constructor: ->
@@ -190,8 +190,8 @@ class ListItemBBCodeTag extends BBCodeTag
     @CLOSED_BY = ['*', '/list']
     @STRIP_INNER = true
 
-  _to_html: ->
-      ['<li>', @get_content(), '</li>']
+  _toHTML: ->
+      ['<li>', @getContent(), '</li>']
 
 class QuoteBBCodeTag extends BBCodeTag
   constructor: ->
@@ -200,8 +200,8 @@ class QuoteBBCodeTag extends BBCodeTag
     @STRIP_INNER = true
     @STRIP_OUTER = true
 
-  _to_html: ->
-    pieces = ['<blockquote>', @get_content()]
+  _toHTML: ->
+    pieces = ['<blockquote>', @getContent()]
 
     citation = @params['quote']
 
@@ -215,8 +215,8 @@ class QuoteBBCodeTag extends BBCodeTag
     return pieces
 
 class LinkBBCodeTag extends BBCodeTag
-  _to_html: ->
-    url = @renderer.strip(@params[@name] or @get_content(true))
+  _toHTML: ->
+    url = @renderer.strip(@params[@name] or @getContent(true))
 
     if /javascript:/i.test(url)
       url = ''
@@ -225,44 +225,44 @@ class LinkBBCodeTag extends BBCodeTag
 
     if url
       @renderer.context {'linkify': false}, =>
-        ["<a href=\"#{url}\" target=\"_blank\">", @get_content(), '</a>']
+        ["<a href=\"#{url}\" target=\"_blank\">", @getContent(), '</a>']
     else
-      [@get_content()]
+      [@getContent()]
 
-create_simple_tag = (name, attributes) ->
-  class SimpleBBCodeTag extends BBCodeTag
+createSimpleTag = (name, attributes) ->
+  class SimpleTag extends BBCodeTag
     constructor: ->
       super
 
       for k ,v of attributes
         @[k] = v
 
-    _to_html: ->
-      html_attributes = @renderer.html_attributes(@params)
+    _toHTML: ->
+      htmlAttributes = @renderer.htmlAttributes(@params)
 
-      if html_attributes
-        html_attributes = ' ' + html_attributes
+      if htmlAttributes
+        htmlAttributes = ' ' + htmlAttributes
 
-      return ["<#{name}#{html_attributes}>", @get_content(), "</#{name}>"]
+      return ["<#{name}#{htmlAttributes}>", @getContent(), "</#{name}>"]
 
 window.BBCODE_TAGS =
-  b: create_simple_tag('strong')
-  i: create_simple_tag('em')
-  u: create_simple_tag('u')
-  s: create_simple_tag('strike')
-  h1: create_simple_tag('h1', {STRIP_OUTER: true})
-  h2: create_simple_tag('h2', {STRIP_OUTER: true})
-  h3: create_simple_tag('h3', {STRIP_OUTER: true})
-  h4: create_simple_tag('h4', {STRIP_OUTER: true})
-  h5: create_simple_tag('h5', {STRIP_OUTER: true})
-  h6: create_simple_tag('h6', {STRIP_OUTER: true})
-  pre: create_simple_tag('pre')
-  table: create_simple_tag('table', {DISCARD_TEXT: true})
-  thead: create_simple_tag('thead', {DISCARD_TEXT: true})
-  tbody: create_simple_tag('tbody', {DISCARD_TEXT: true})
-  tr: create_simple_tag('tr', {DISCARD_TEXT: true})
-  th: create_simple_tag('th')
-  td: create_simple_tag('td')
+  b: createSimpleTag('strong')
+  i: createSimpleTag('em')
+  u: createSimpleTag('u')
+  s: createSimpleTag('strike')
+  h1: createSimpleTag('h1', {STRIP_OUTER: true})
+  h2: createSimpleTag('h2', {STRIP_OUTER: true})
+  h3: createSimpleTag('h3', {STRIP_OUTER: true})
+  h4: createSimpleTag('h4', {STRIP_OUTER: true})
+  h5: createSimpleTag('h5', {STRIP_OUTER: true})
+  h6: createSimpleTag('h6', {STRIP_OUTER: true})
+  pre: createSimpleTag('pre')
+  table: createSimpleTag('table', {DISCARD_TEXT: true})
+  thead: createSimpleTag('thead', {DISCARD_TEXT: true})
+  tbody: createSimpleTag('tbody', {DISCARD_TEXT: true})
+  tr: createSimpleTag('tr', {DISCARD_TEXT: true})
+  th: createSimpleTag('th')
+  td: createSimpleTag('td')
   code: CodeBBCodeTag
   img: ImageBBCodeTag
   hr: HorizontalRuleBBCodeTag

@@ -3,34 +3,34 @@ _TOKEN_RE = /(\[\/?.+?\])/
 _START_NEWLINE_RE = /^\r?\n/
 
 class window.BBCodeParser
-  constructor: (allowed_tags=null) ->
+  constructor: (allowedTags=null) ->
     @tags = {}
 
-    if not allowed_tags
+    if not allowedTags
       for name, tag of BBCODE_TAGS
-        @register_tag(name, tag)
+        @registerTag(name, tag)
     else
-      for name in allowed_tags
+      for name in allowedTags
         if name in BBCODE_TAGS
-          @register_tag(name, BBCODE_TAGS[name])
+          @registerTag(name, BBCODE_TAGS[name])
 
     @renderer = new BBCodeRenderer()
 
-  register_tag: (name, tag) ->
+  registerTag: (name, tag) ->
     @tags[name] = tag
 
-  _parse_params: (token) ->
+  _parseParams: (token) ->
     params = []
 
     if token
       target = key = []
       value = []
       terminate = ' '
-      skip_next = false
+      skipNext = false
 
       for c in token
-        if skip_next
-          skip_next = false
+        if skipNext
+          skipNext = false
         else if target is key and c is '='
           target = value
         else if not value.length and c is '"'
@@ -41,7 +41,7 @@ class window.BBCodeParser
           params.push([key.join('').toLowerCase(), value.join('')])
 
           if not _SPACE_RE.test(terminate)
-            skip_next = true
+            skipNext = true
 
           target = key = []
           value = []
@@ -51,7 +51,7 @@ class window.BBCodeParser
 
     return params
 
-  _create_text_node: (parent, text) ->
+  _createTextNode: (parent, text) ->
     if parent.children.slice(-1)[0]?.STRIP_OUTER
       text = text.replace(_START_NEWLINE_RE, '')
 
@@ -69,42 +69,42 @@ class window.BBCodeParser
       token = tokens.shift()
 
       if token.match(_TOKEN_RE)
-        params = @_parse_params(token[1...-1])
-        tag_name = params[0][0]
+        params = @_parseParams(token[1...-1])
+        tagName = params[0][0]
 
-        if tag_name in current.CLOSED_BY
+        if tagName in current.CLOSED_BY
           tokens.unshift(token)
-          tag_name = '/' + current.name
+          tagName = '/' + current.name
           params = []
 
-        if tag_name[0] is '/'
-          tag_name = tag_name.slice(1)
+        if tagName[0] is '/'
+          tagName = tagName.slice(1)
 
-          if tag_name not of @tags
-            @_create_text_node(current, token)
+          if tagName not of @tags
+            @_createTextNode(current, token)
             continue
 
-          if current.name is tag_name
+          if current.name is tagName
             current = current.parent
         else
-          cls = @tags[tag_name]
+          cls = @tags[tagName]
 
           if not cls
-            @_create_text_node(current, token)
+            @_createTextNode(current, token)
             continue
 
           tag = new cls(@renderer,
-            name: tag_name
+            name: tagName
             parent: current
             params: params
           )
 
-          if not tag.SELF_CLOSE and (tag_name not in tag.CLOSED_BY or current.name isnt tag_name)
+          if not tag.SELF_CLOSE and (tagName not in tag.CLOSED_BY or current.name isnt tagName)
             current = tag
       else
-        @_create_text_node(current, token)
+        @_createTextNode(current, token)
 
     return root
 
-  to_html: (bbcode, prettify=false) ->
-    html = @parse(bbcode).to_html()
+  toHTML: (bbcode, prettify=false) ->
+    html = @parse(bbcode).toHTML()
