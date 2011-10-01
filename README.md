@@ -6,7 +6,6 @@ bbcode.js is a JavaScript BBCode parser and renderer written in CoffeeScript.
 
 Ported from https://github.com/vishnevskiy/bbcodepy!
 
-
 Usage
 -----
 
