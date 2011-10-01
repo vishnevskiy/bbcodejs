@@ -57,9 +57,10 @@ Hey you are a pretty [cool] dude, you know [/that?]
 
 http://www.guildwork.com/
 http://guildwork.com/forum/t/4e7668741d41c85c6a000002-asdsada?page=1&_=89f7#4e81892b1d41c84b1c000001</script>
+<script type="text/javascript" src="../src/js/bbcode.js"></script>
 <script type="text/javascript" src="../src/js/renderer.js"></script>
 <script type="text/javascript" src="../src/js/tags.js"></script>
 <script type="text/javascript" src="../src/js/parser.js"></script>
 <script type="text/javascript" >
-    document.getElementById('html').innerHTML =  new BBCodeParser().toHTML(document.getElementById('bbcode').innerHTML);
+    document.getElementById('html').innerHTML =  new bbcode.Parser().toHTML(document.getElementById('bbcode').innerHTML);
 </script>

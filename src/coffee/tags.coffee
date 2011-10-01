@@ -1,7 +1,7 @@
 _NEWLINE_RE = /\r?\n/g
 _LINE_BREAK = '<br />'
 
-class window.BBCodeTag
+class @bbcode.Tag
   constructor: (@renderer, settings={}) ->
     @CLOSED_BY = []
     @SELF_CLOSE = false
@@ -93,7 +93,7 @@ class window.BBCodeTag
   toHTML: ->
     @_toHTML().join('')
 
-class CodeBBCodeTag extends BBCodeTag
+class CodeTag extends @bbcode.Tag
   constructor: ->
     super
 
@@ -115,7 +115,7 @@ class CodeBBCodeTag extends BBCodeTag
       else
           ['<pre>', @getContent(true), '</pre>']
 
-class ImageBBCodeTag extends BBCodeTag
+class ImageTag extends @bbcode.Tag
   _toHTML: ->
     attributes =
       src: @renderer.strip(@getContent(true))
@@ -128,7 +128,7 @@ class ImageBBCodeTag extends BBCodeTag
 
     ["<img #{@renderer.htmlAttributes(attributes)} />"]
 
-class SizeBBCodeTag extends BBCodeTag
+class SizeTag extends @bbcode.Tag
   _toHTML: ->
     size = @params['size']
 
@@ -137,7 +137,7 @@ class SizeBBCodeTag extends BBCodeTag
 
     ["<span style=\"font-size:#{size}px\">", @getContent(), '</span>']
 
-class ColorBBCodeTag extends BBCodeTag
+class ColorTag extends @bbcode.Tag
   _toHTML: ->
     color = @params['color']
 
@@ -146,15 +146,15 @@ class ColorBBCodeTag extends BBCodeTag
 
     ["<span style=\"color:#{color}\">", @getContent(), '</span>']
 
-class CenterBBCodeTag extends BBCodeTag
+class CenterTag extends @bbcode.Tag
   _toHTML: ->
     ['<div style="text-align:center;">', @getContent(), '</div>']
 
-class RightBBCodeTag extends BBCodeTag
+class RightTag extends @bbcode.Tag
   _toHTML: ->
     ['<div style="float:right;">', @getContent(), '</div>']
 
-class HorizontalRuleBBCodeTag extends BBCodeTag
+class HorizontalRuleTag extends @bbcode.Tag
   constructor: ->
     super
 
@@ -164,7 +164,7 @@ class HorizontalRuleBBCodeTag extends BBCodeTag
   _toHTML: ->
     ['<hr />']
 
-class ListBBCodeTag extends BBCodeTag
+class ListTag extends @bbcode.Tag
   constructor: ->
     super
 
@@ -183,7 +183,7 @@ class ListBBCodeTag extends BBCodeTag
     else
         ['<ul>', @getContent(), '</ul>']
 
-class ListItemBBCodeTag extends BBCodeTag
+class ListItemTag extends @bbcode.Tag
   constructor: ->
     super
 
@@ -193,7 +193,7 @@ class ListItemBBCodeTag extends BBCodeTag
   _toHTML: ->
       ['<li>', @getContent(), '</li>']
 
-class QuoteBBCodeTag extends BBCodeTag
+class QuoteTag extends @bbcode.Tag
   constructor: ->
     super
 
@@ -214,7 +214,7 @@ class QuoteBBCodeTag extends BBCodeTag
 
     return pieces
 
-class LinkBBCodeTag extends BBCodeTag
+class LinkTag extends @bbcode.Tag
   _toHTML: ->
     url = @renderer.strip(@params[@name] or @getContent(true))
 
@@ -230,7 +230,7 @@ class LinkBBCodeTag extends BBCodeTag
       [@getContent()]
 
 createSimpleTag = (name, attributes) ->
-  class SimpleTag extends BBCodeTag
+  class SimpleTag extends @bbcode.Tag
     constructor: ->
       super
 
@@ -245,7 +245,7 @@ createSimpleTag = (name, attributes) ->
 
       return ["<#{name}#{htmlAttributes}>", @getContent(), "</#{name}>"]
 
-window.BBCODE_TAGS =
+@bbcode.BUILTIN =
   b: createSimpleTag('strong')
   i: createSimpleTag('em')
   u: createSimpleTag('u')
@@ -263,15 +263,15 @@ window.BBCODE_TAGS =
   tr: createSimpleTag('tr', {DISCARD_TEXT: true})
   th: createSimpleTag('th')
   td: createSimpleTag('td')
-  code: CodeBBCodeTag
-  img: ImageBBCodeTag
-  hr: HorizontalRuleBBCodeTag
-  size: SizeBBCodeTag
-  center: CenterBBCodeTag
-  right: RightBBCodeTag
-  color: ColorBBCodeTag
-  list: ListBBCodeTag
-  '*': ListItemBBCodeTag
-  quote: QuoteBBCodeTag
-  url: LinkBBCodeTag
-  link: LinkBBCodeTag
+  code: CodeTag
+  img: ImageTag
+  hr: HorizontalRuleTag
+  size: SizeTag
+  center: CenterTag
+  right: RightTag
+  color: ColorTag
+  list: ListTag
+  '*': ListItemTag
+  quote: QuoteTag
+  url: LinkTag
+  link: LinkTag

@@ -1,4 +1,5 @@
 JS_FILES = \
+	src/js/bbcode.js \
 	src/js/renderer.js \
    	src/js/tags.js \
    	src/js/parser.js

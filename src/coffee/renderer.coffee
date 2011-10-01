@@ -17,7 +17,7 @@ _COSMETIC_DICT =
 
 _COSMETIC_RE = new RegExp((key.replace(/(\.|\)|\()/g, '\\$1') for key of _COSMETIC_DICT).join('|'))
 
-class window.BBCodeRenderer
+class @bbcode.Renderer
   constructor: ->
     @_contexts = []
     @options =

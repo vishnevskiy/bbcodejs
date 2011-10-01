@@ -9,32 +9,33 @@
   _SPACE_RE = /^\s*$/;
   _TOKEN_RE = /(\[\/?.+?\])/;
   _START_NEWLINE_RE = /^\r?\n/;
-  window.BBCodeParser = (function() {
-    function BBCodeParser(allowedTags) {
-      var name, tag, _i, _len;
+  this.bbcode.Parser = (function() {
+    function Parser(allowedTags) {
+      var name, tag, _i, _len, _ref;
       if (allowedTags == null) {
         allowedTags = null;
       }
       this.tags = {};
       if (!allowedTags) {
-        for (name in BBCODE_TAGS) {
-          tag = BBCODE_TAGS[name];
+        _ref = bbcode.BUILTIN;
+        for (name in _ref) {
+          tag = _ref[name];
           this.registerTag(name, tag);
         }
       } else {
         for (_i = 0, _len = allowedTags.length; _i < _len; _i++) {
           name = allowedTags[_i];
-          if (__indexOf.call(BBCODE_TAGS, name) >= 0) {
-            this.registerTag(name, BBCODE_TAGS[name]);
+          if (__indexOf.call(bbcode.BUILTIN, name) >= 0) {
+            this.registerTag(name, bbcode.BUILTIN[name]);
           }
         }
       }
-      this.renderer = new BBCodeRenderer();
+      this.renderer = new bbcode.Renderer();
     }
-    BBCodeParser.prototype.registerTag = function(name, tag) {
+    Parser.prototype.registerTag = function(name, tag) {
       return this.tags[name] = tag;
     };
-    BBCodeParser.prototype._parseParams = function(token) {
+    Parser.prototype._parseParams = function(token) {
       var c, key, params, skipNext, target, terminate, value, _i, _len;
       params = [];
       if (token) {
@@ -66,20 +67,20 @@
       }
       return params;
     };
-    BBCodeParser.prototype._createTextNode = function(parent, text) {
+    Parser.prototype._createTextNode = function(parent, text) {
       var _ref;
       if ((_ref = parent.children.slice(-1)[0]) != null ? _ref.STRIP_OUTER : void 0) {
         text = text.replace(_START_NEWLINE_RE, '');
       }
-      return new BBCodeTag(this.renderer, {
+      return new bbcode.Tag(this.renderer, {
         text: text,
         parent: parent
       });
     };
-    BBCodeParser.prototype.parse = function(bbcode) {
+    Parser.prototype.parse = function(input) {
       var cls, current, params, root, tag, tagName, token, tokens;
-      current = root = new BBCodeTag(this.renderer);
-      tokens = bbcode.split(_TOKEN_RE);
+      current = root = new bbcode.Tag(this.renderer);
+      tokens = input.split(_TOKEN_RE);
       while (tokens.length) {
         token = tokens.shift();
         if (token.match(_TOKEN_RE)) {
@@ -120,10 +121,10 @@
       }
       return root;
     };
-    BBCodeParser.prototype.toHTML = function(bbcode) {
+    Parser.prototype.toHTML = function(input) {
       var html;
-      return html = this.parse(bbcode).toHTML();
+      return html = this.parse(input).toHTML();
     };
-    return BBCodeParser;
+    return Parser;
   })();
 }).call(this);

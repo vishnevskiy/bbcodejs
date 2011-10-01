@@ -12,6 +12,6 @@ Usage
 ``` html
 <script src="bbcode.min.js" type="text/javascript"></script>
 <script type="text/javascript">
-    var html = new BBCodeParser().toHTML('[b]Hello![/b]');
+    var html = new bbcode.Parser().toHTML('[b]Hello![/b]');
 </script>
 ```

@@ -1,4 +1,7 @@
 (function() {
+  this.bbcode = {};
+}).call(this);
+(function() {
   var key, _COSMETIC_DICT, _COSMETIC_RE, _ESCAPE_DICT, _ESCAPE_RE, _URL_RE;
   var __slice = Array.prototype.slice;
   _ESCAPE_RE = /[&<>"]/g;
@@ -25,14 +28,14 @@
     }
     return _results;
   })()).join('|'));
-  window.BBCodeRenderer = (function() {
-    function BBCodeRenderer() {
+  this.bbcode.Renderer = (function() {
+    function Renderer() {
       this._contexts = [];
       this.options = {
         linkify: true
       };
     }
-    BBCodeRenderer.prototype.context = function(context, func) {
+    Renderer.prototype.context = function(context, func) {
       var k, newOptions, v, _ref;
       newOptions = {};
       _ref = this.options;
@@ -50,12 +53,12 @@
       this.options = this._contexts.pop();
       return v;
     };
-    BBCodeRenderer.prototype.escape = function(value) {
+    Renderer.prototype.escape = function(value) {
       return value.replace(_ESCAPE_RE, function(match) {
         return _ESCAPE_DICT[match];
       });
     };
-    BBCodeRenderer.prototype.linkify = function(value) {
+    Renderer.prototype.linkify = function(value) {
       return value.replace(_URL_RE, function() {
         var href, match, proto, url;
         match = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
@@ -71,10 +74,10 @@
         return "<a href=\"" + href + "\" target=\"_blank\">" + url + "</a>";
       });
     };
-    BBCodeRenderer.prototype.strip = function(text) {
+    Renderer.prototype.strip = function(text) {
       return text.replace(/^\s+|\s+$/g, '');
     };
-    BBCodeRenderer.prototype.cosmeticReplace = function(value) {
+    Renderer.prototype.cosmeticReplace = function(value) {
       return value.replace(_COSMETIC_RE, function() {
         var item, match;
         match = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
@@ -82,7 +85,7 @@
         return _COSMETIC_DICT[item] || item;
       });
     };
-    BBCodeRenderer.prototype.htmlAttributes = function(attributes) {
+    Renderer.prototype.htmlAttributes = function(attributes) {
       var k, v;
       if (!attributes) {
         return '';
@@ -97,11 +100,11 @@
         return _results;
       })()).join(' ');
     };
-    return BBCodeRenderer;
+    return Renderer;
   })();
 }).call(this);
 (function() {
-  var CenterBBCodeTag, CodeBBCodeTag, ColorBBCodeTag, HorizontalRuleBBCodeTag, ImageBBCodeTag, LinkBBCodeTag, ListBBCodeTag, ListItemBBCodeTag, QuoteBBCodeTag, RightBBCodeTag, SizeBBCodeTag, createSimpleTag, _LINE_BREAK, _NEWLINE_RE;
+  var CenterTag, CodeTag, ColorTag, HorizontalRuleTag, ImageTag, LinkTag, ListItemTag, ListTag, QuoteTag, RightTag, SizeTag, createSimpleTag, _LINE_BREAK, _NEWLINE_RE;
   var __indexOf = Array.prototype.indexOf || function(item) {
     for (var i = 0, l = this.length; i < l; i++) {
       if (this[i] === item) return i;
@@ -117,8 +120,8 @@
   }, __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
   _NEWLINE_RE = /\r?\n/g;
   _LINE_BREAK = '<br />';
-  window.BBCodeTag = (function() {
-    function BBCodeTag(renderer, settings) {
+  this.bbcode.Tag = (function() {
+    function Tag(renderer, settings) {
       var key, value, _i, _len, _ref, _ref2, _ref3;
       this.renderer = renderer;
       if (settings == null) {
@@ -148,7 +151,7 @@
       }
       this.children = [];
     }
-    BBCodeTag.prototype.getContent = function(raw) {
+    Tag.prototype.getContent = function(raw) {
       var child, children, content, pieces, text, _i, _len;
       if (raw == null) {
         raw = false;
@@ -189,7 +192,7 @@
       }
       return content;
     };
-    BBCodeTag.prototype.toText = function(contentAsHTML) {
+    Tag.prototype.toText = function(contentAsHTML) {
       var k, params, pieces, v, _ref;
       if (contentAsHTML == null) {
         contentAsHTML = false;
@@ -222,25 +225,25 @@
       }
       return pieces.join('');
     };
-    BBCodeTag.prototype._toHTML = function() {
+    Tag.prototype._toHTML = function() {
       return [this.toText(true)];
     };
-    BBCodeTag.prototype.toHTML = function() {
+    Tag.prototype.toHTML = function() {
       return this._toHTML().join('');
     };
-    return BBCodeTag;
+    return Tag;
   })();
-  CodeBBCodeTag = (function() {
-    __extends(CodeBBCodeTag, BBCodeTag);
-    function CodeBBCodeTag() {
-      CodeBBCodeTag.__super__.constructor.apply(this, arguments);
+  CodeTag = (function() {
+    __extends(CodeTag, this.bbcode.Tag);
+    function CodeTag() {
+      CodeTag.__super__.constructor.apply(this, arguments);
       this.STRIP_INNER = true;
       this._inline = this.params['code'] === 'inline';
       if (!this._inline) {
         this.STRIP_OUTER = true;
       }
     }
-    CodeBBCodeTag.prototype._toHTML = function() {
+    CodeTag.prototype._toHTML = function() {
       var lang;
       if (this._inline) {
         return ['<code>', this.getContent(true), '</code>'];
@@ -252,14 +255,14 @@
         return ['<pre>', this.getContent(true), '</pre>'];
       }
     };
-    return CodeBBCodeTag;
-  })();
-  ImageBBCodeTag = (function() {
-    __extends(ImageBBCodeTag, BBCodeTag);
-    function ImageBBCodeTag() {
-      ImageBBCodeTag.__super__.constructor.apply(this, arguments);
+    return CodeTag;
+  }).call(this);
+  ImageTag = (function() {
+    __extends(ImageTag, this.bbcode.Tag);
+    function ImageTag() {
+      ImageTag.__super__.constructor.apply(this, arguments);
     }
-    ImageBBCodeTag.prototype._toHTML = function() {
+    ImageTag.prototype._toHTML = function() {
       var attributes;
       attributes = {
         src: this.renderer.strip(this.getContent(true))
@@ -272,14 +275,14 @@
       }
       return ["<img " + (this.renderer.htmlAttributes(attributes)) + " />"];
     };
-    return ImageBBCodeTag;
-  })();
-  SizeBBCodeTag = (function() {
-    __extends(SizeBBCodeTag, BBCodeTag);
-    function SizeBBCodeTag() {
-      SizeBBCodeTag.__super__.constructor.apply(this, arguments);
+    return ImageTag;
+  }).call(this);
+  SizeTag = (function() {
+    __extends(SizeTag, this.bbcode.Tag);
+    function SizeTag() {
+      SizeTag.__super__.constructor.apply(this, arguments);
     }
-    SizeBBCodeTag.prototype._toHTML = function() {
+    SizeTag.prototype._toHTML = function() {
       var size;
       size = this.params['size'];
       if (isNaN(size)) {
@@ -287,14 +290,14 @@
       }
       return ["<span style=\"font-size:" + size + "px\">", this.getContent(), '</span>'];
     };
-    return SizeBBCodeTag;
-  })();
-  ColorBBCodeTag = (function() {
-    __extends(ColorBBCodeTag, BBCodeTag);
-    function ColorBBCodeTag() {
-      ColorBBCodeTag.__super__.constructor.apply(this, arguments);
+    return SizeTag;
+  }).call(this);
+  ColorTag = (function() {
+    __extends(ColorTag, this.bbcode.Tag);
+    function ColorTag() {
+      ColorTag.__super__.constructor.apply(this, arguments);
     }
-    ColorBBCodeTag.prototype._toHTML = function() {
+    ColorTag.prototype._toHTML = function() {
       var color;
       color = this.params['color'];
       if (!color) {
@@ -302,48 +305,48 @@
       }
       return ["<span style=\"color:" + color + "\">", this.getContent(), '</span>'];
     };
-    return ColorBBCodeTag;
-  })();
-  CenterBBCodeTag = (function() {
-    __extends(CenterBBCodeTag, BBCodeTag);
-    function CenterBBCodeTag() {
-      CenterBBCodeTag.__super__.constructor.apply(this, arguments);
+    return ColorTag;
+  }).call(this);
+  CenterTag = (function() {
+    __extends(CenterTag, this.bbcode.Tag);
+    function CenterTag() {
+      CenterTag.__super__.constructor.apply(this, arguments);
     }
-    CenterBBCodeTag.prototype._toHTML = function() {
+    CenterTag.prototype._toHTML = function() {
       return ['<div style="text-align:center;">', this.getContent(), '</div>'];
     };
-    return CenterBBCodeTag;
-  })();
-  RightBBCodeTag = (function() {
-    __extends(RightBBCodeTag, BBCodeTag);
-    function RightBBCodeTag() {
-      RightBBCodeTag.__super__.constructor.apply(this, arguments);
+    return CenterTag;
+  }).call(this);
+  RightTag = (function() {
+    __extends(RightTag, this.bbcode.Tag);
+    function RightTag() {
+      RightTag.__super__.constructor.apply(this, arguments);
     }
-    RightBBCodeTag.prototype._toHTML = function() {
+    RightTag.prototype._toHTML = function() {
       return ['<div style="float:right;">', this.getContent(), '</div>'];
     };
-    return RightBBCodeTag;
-  })();
-  HorizontalRuleBBCodeTag = (function() {
-    __extends(HorizontalRuleBBCodeTag, BBCodeTag);
-    function HorizontalRuleBBCodeTag() {
-      HorizontalRuleBBCodeTag.__super__.constructor.apply(this, arguments);
+    return RightTag;
+  }).call(this);
+  HorizontalRuleTag = (function() {
+    __extends(HorizontalRuleTag, this.bbcode.Tag);
+    function HorizontalRuleTag() {
+      HorizontalRuleTag.__super__.constructor.apply(this, arguments);
       this.SELF_CLOSE = true;
       this.STRIP_OUTER = true;
     }
-    HorizontalRuleBBCodeTag.prototype._toHTML = function() {
+    HorizontalRuleTag.prototype._toHTML = function() {
       return ['<hr />'];
     };
-    return HorizontalRuleBBCodeTag;
-  })();
-  ListBBCodeTag = (function() {
-    __extends(ListBBCodeTag, BBCodeTag);
-    function ListBBCodeTag() {
-      ListBBCodeTag.__super__.constructor.apply(this, arguments);
+    return HorizontalRuleTag;
+  }).call(this);
+  ListTag = (function() {
+    __extends(ListTag, this.bbcode.Tag);
+    function ListTag() {
+      ListTag.__super__.constructor.apply(this, arguments);
       this.STRIP_INNER = true;
       this.STRIP_OUTER = true;
     }
-    ListBBCodeTag.prototype._toHTML = function() {
+    ListTag.prototype._toHTML = function() {
       var listType;
       listType = this.params['list'];
       if (listType === '1') {
@@ -356,28 +359,28 @@
         return ['<ul>', this.getContent(), '</ul>'];
       }
     };
-    return ListBBCodeTag;
-  })();
-  ListItemBBCodeTag = (function() {
-    __extends(ListItemBBCodeTag, BBCodeTag);
-    function ListItemBBCodeTag() {
-      ListItemBBCodeTag.__super__.constructor.apply(this, arguments);
+    return ListTag;
+  }).call(this);
+  ListItemTag = (function() {
+    __extends(ListItemTag, this.bbcode.Tag);
+    function ListItemTag() {
+      ListItemTag.__super__.constructor.apply(this, arguments);
       this.CLOSED_BY = ['*', '/list'];
       this.STRIP_INNER = true;
     }
-    ListItemBBCodeTag.prototype._toHTML = function() {
+    ListItemTag.prototype._toHTML = function() {
       return ['<li>', this.getContent(), '</li>'];
     };
-    return ListItemBBCodeTag;
-  })();
-  QuoteBBCodeTag = (function() {
-    __extends(QuoteBBCodeTag, BBCodeTag);
-    function QuoteBBCodeTag() {
-      QuoteBBCodeTag.__super__.constructor.apply(this, arguments);
+    return ListItemTag;
+  }).call(this);
+  QuoteTag = (function() {
+    __extends(QuoteTag, this.bbcode.Tag);
+    function QuoteTag() {
+      QuoteTag.__super__.constructor.apply(this, arguments);
       this.STRIP_INNER = true;
       this.STRIP_OUTER = true;
     }
-    QuoteBBCodeTag.prototype._toHTML = function() {
+    QuoteTag.prototype._toHTML = function() {
       var citation, pieces;
       pieces = ['<blockquote>', this.getContent()];
       citation = this.params['quote'];
@@ -389,14 +392,14 @@
       pieces.push('</blockquote>');
       return pieces;
     };
-    return QuoteBBCodeTag;
-  })();
-  LinkBBCodeTag = (function() {
-    __extends(LinkBBCodeTag, BBCodeTag);
-    function LinkBBCodeTag() {
-      LinkBBCodeTag.__super__.constructor.apply(this, arguments);
+    return QuoteTag;
+  }).call(this);
+  LinkTag = (function() {
+    __extends(LinkTag, this.bbcode.Tag);
+    function LinkTag() {
+      LinkTag.__super__.constructor.apply(this, arguments);
     }
-    LinkBBCodeTag.prototype._toHTML = function() {
+    LinkTag.prototype._toHTML = function() {
       var url;
       url = this.renderer.strip(this.params[this.name] || this.getContent(true));
       if (/javascript:/i.test(url)) {
@@ -414,12 +417,12 @@
         return [this.getContent()];
       }
     };
-    return LinkBBCodeTag;
-  })();
+    return LinkTag;
+  }).call(this);
   createSimpleTag = function(name, attributes) {
     var SimpleTag;
     return SimpleTag = (function() {
-      __extends(SimpleTag, BBCodeTag);
+      __extends(SimpleTag, this.bbcode.Tag);
       function SimpleTag() {
         var k, v;
         SimpleTag.__super__.constructor.apply(this, arguments);
@@ -437,9 +440,9 @@
         return ["<" + name + htmlAttributes + ">", this.getContent(), "</" + name + ">"];
       };
       return SimpleTag;
-    })();
+    }).call(this);
   };
-  window.BBCODE_TAGS = {
+  this.bbcode.BUILTIN = {
     b: createSimpleTag('strong'),
     i: createSimpleTag('em'),
     u: createSimpleTag('u'),
@@ -477,18 +480,18 @@
     }),
     th: createSimpleTag('th'),
     td: createSimpleTag('td'),
-    code: CodeBBCodeTag,
-    img: ImageBBCodeTag,
-    hr: HorizontalRuleBBCodeTag,
-    size: SizeBBCodeTag,
-    center: CenterBBCodeTag,
-    right: RightBBCodeTag,
-    color: ColorBBCodeTag,
-    list: ListBBCodeTag,
-    '*': ListItemBBCodeTag,
-    quote: QuoteBBCodeTag,
-    url: LinkBBCodeTag,
-    link: LinkBBCodeTag
+    code: CodeTag,
+    img: ImageTag,
+    hr: HorizontalRuleTag,
+    size: SizeTag,
+    center: CenterTag,
+    right: RightTag,
+    color: ColorTag,
+    list: ListTag,
+    '*': ListItemTag,
+    quote: QuoteTag,
+    url: LinkTag,
+    link: LinkTag
   };
 }).call(this);
 (function() {
@@ -502,32 +505,33 @@
   _SPACE_RE = /^\s*$/;
   _TOKEN_RE = /(\[\/?.+?\])/;
   _START_NEWLINE_RE = /^\r?\n/;
-  window.BBCodeParser = (function() {
-    function BBCodeParser(allowedTags) {
-      var name, tag, _i, _len;
+  this.bbcode.Parser = (function() {
+    function Parser(allowedTags) {
+      var name, tag, _i, _len, _ref;
       if (allowedTags == null) {
         allowedTags = null;
       }
       this.tags = {};
       if (!allowedTags) {
-        for (name in BBCODE_TAGS) {
-          tag = BBCODE_TAGS[name];
+        _ref = bbcode.BUILTIN;
+        for (name in _ref) {
+          tag = _ref[name];
           this.registerTag(name, tag);
         }
       } else {
         for (_i = 0, _len = allowedTags.length; _i < _len; _i++) {
           name = allowedTags[_i];
-          if (__indexOf.call(BBCODE_TAGS, name) >= 0) {
-            this.registerTag(name, BBCODE_TAGS[name]);
+          if (__indexOf.call(bbcode.BUILTIN, name) >= 0) {
+            this.registerTag(name, bbcode.BUILTIN[name]);
           }
         }
       }
-      this.renderer = new BBCodeRenderer();
+      this.renderer = new bbcode.Renderer();
     }
-    BBCodeParser.prototype.registerTag = function(name, tag) {
+    Parser.prototype.registerTag = function(name, tag) {
       return this.tags[name] = tag;
     };
-    BBCodeParser.prototype._parseParams = function(token) {
+    Parser.prototype._parseParams = function(token) {
       var c, key, params, skipNext, target, terminate, value, _i, _len;
       params = [];
       if (token) {
@@ -559,20 +563,20 @@
       }
       return params;
     };
-    BBCodeParser.prototype._createTextNode = function(parent, text) {
+    Parser.prototype._createTextNode = function(parent, text) {
       var _ref;
       if ((_ref = parent.children.slice(-1)[0]) != null ? _ref.STRIP_OUTER : void 0) {
         text = text.replace(_START_NEWLINE_RE, '');
       }
-      return new BBCodeTag(this.renderer, {
+      return new bbcode.Tag(this.renderer, {
         text: text,
         parent: parent
       });
     };
-    BBCodeParser.prototype.parse = function(bbcode) {
+    Parser.prototype.parse = function(input) {
       var cls, current, params, root, tag, tagName, token, tokens;
-      current = root = new BBCodeTag(this.renderer);
-      tokens = bbcode.split(_TOKEN_RE);
+      current = root = new bbcode.Tag(this.renderer);
+      tokens = input.split(_TOKEN_RE);
       while (tokens.length) {
         token = tokens.shift();
         if (token.match(_TOKEN_RE)) {
@@ -613,10 +617,10 @@
       }
       return root;
     };
-    BBCodeParser.prototype.toHTML = function(bbcode) {
+    Parser.prototype.toHTML = function(input) {
       var html;
-      return html = this.parse(bbcode).toHTML();
+      return html = this.parse(input).toHTML();
     };
-    return BBCodeParser;
+    return Parser;
   })();
 }).call(this);

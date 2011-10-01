@@ -25,14 +25,14 @@
     }
     return _results;
   })()).join('|'));
-  window.BBCodeRenderer = (function() {
-    function BBCodeRenderer() {
+  this.bbcode.Renderer = (function() {
+    function Renderer() {
       this._contexts = [];
       this.options = {
         linkify: true
       };
     }
-    BBCodeRenderer.prototype.context = function(context, func) {
+    Renderer.prototype.context = function(context, func) {
       var k, newOptions, v, _ref;
       newOptions = {};
       _ref = this.options;
@@ -50,12 +50,12 @@
       this.options = this._contexts.pop();
       return v;
     };
-    BBCodeRenderer.prototype.escape = function(value) {
+    Renderer.prototype.escape = function(value) {
       return value.replace(_ESCAPE_RE, function(match) {
         return _ESCAPE_DICT[match];
       });
     };
-    BBCodeRenderer.prototype.linkify = function(value) {
+    Renderer.prototype.linkify = function(value) {
       return value.replace(_URL_RE, function() {
         var href, match, proto, url;
         match = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
@@ -71,10 +71,10 @@
         return "<a href=\"" + href + "\" target=\"_blank\">" + url + "</a>";
       });
     };
-    BBCodeRenderer.prototype.strip = function(text) {
+    Renderer.prototype.strip = function(text) {
       return text.replace(/^\s+|\s+$/g, '');
     };
-    BBCodeRenderer.prototype.cosmeticReplace = function(value) {
+    Renderer.prototype.cosmeticReplace = function(value) {
       return value.replace(_COSMETIC_RE, function() {
         var item, match;
         match = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
@@ -82,7 +82,7 @@
         return _COSMETIC_DICT[item] || item;
       });
     };
-    BBCodeRenderer.prototype.htmlAttributes = function(attributes) {
+    Renderer.prototype.htmlAttributes = function(attributes) {
       var k, v;
       if (!attributes) {
         return '';
@@ -97,6 +97,6 @@
         return _results;
       })()).join(' ');
     };
-    return BBCodeRenderer;
+    return Renderer;
   })();
 }).call(this);

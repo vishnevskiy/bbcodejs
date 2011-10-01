@@ -2,19 +2,19 @@ _SPACE_RE = /^\s*$/
 _TOKEN_RE = /(\[\/?.+?\])/
 _START_NEWLINE_RE = /^\r?\n/
 
-class window.BBCodeParser
+class @bbcode.Parser
   constructor: (allowedTags=null) ->
     @tags = {}
 
     if not allowedTags
-      for name, tag of BBCODE_TAGS
+      for name, tag of bbcode.BUILTIN
         @registerTag(name, tag)
     else
       for name in allowedTags
-        if name in BBCODE_TAGS
-          @registerTag(name, BBCODE_TAGS[name])
+        if name in bbcode.BUILTIN
+          @registerTag(name, bbcode.BUILTIN[name])
 
-    @renderer = new BBCodeRenderer()
+    @renderer = new bbcode.Renderer()
 
   registerTag: (name, tag) ->
     @tags[name] = tag
@@ -55,15 +55,15 @@ class window.BBCodeParser
     if parent.children.slice(-1)[0]?.STRIP_OUTER
       text = text.replace(_START_NEWLINE_RE, '')
 
-    new BBCodeTag(@renderer,
+    new bbcode.Tag(@renderer,
       text: text
       parent: parent
     )
 
-  parse: (bbcode) ->
-    current = root = new BBCodeTag(@renderer)
+  parse: (input) ->
+    current = root = new bbcode.Tag(@renderer)
 
-    tokens = bbcode.split(_TOKEN_RE)
+    tokens = input.split(_TOKEN_RE)
 
     while tokens.length
       token = tokens.shift()
@@ -106,5 +106,5 @@ class window.BBCodeParser
 
     return root
 
-  toHTML: (bbcode) ->
-    html = @parse(bbcode).toHTML()
+  toHTML: (input) ->
+    html = @parse(input).toHTML()
