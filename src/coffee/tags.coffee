@@ -88,10 +88,11 @@ class @bbcode.Tag
     pieces.join('')
 
   _toHTML: ->
-    [@toText(true)]
+    @toText(true)
 
   toHTML: ->
-    @_toHTML().join('')
+    pieces = @_toHTML()
+    if typeof pieces is 'string' then pieces else pieces.join('')
 
 class CodeTag extends @bbcode.Tag
   constructor: ->
@@ -126,25 +127,25 @@ class ImageTag extends @bbcode.Tag
     if 'height' of @params
       attributes['height'] = @params['height']
 
-    ["<img #{@renderer.htmlAttributes(attributes)} />"]
+    "<img #{@renderer.htmlAttributes(attributes)} />"
 
 class SizeTag extends @bbcode.Tag
   _toHTML: ->
     size = @params['size']
 
     if isNaN(size)
-      return @getContent()
-
-    ["<span style=\"font-size:#{size}px\">", @getContent(), '</span>']
+      @getContent()
+    else
+      ["<span style=\"font-size:#{size}px\">", @getContent(), '</span>']
 
 class ColorTag extends @bbcode.Tag
   _toHTML: ->
     color = @params['color']
 
-    if not color
-      return @getContent()
-
-    ["<span style=\"color:#{color}\">", @getContent(), '</span>']
+    if color?
+      ["<span style=\"color:#{color}\">", @getContent(), '</span>']
+    else
+      @getContent()
 
 class CenterTag extends @bbcode.Tag
   _toHTML: ->
@@ -162,7 +163,7 @@ class HorizontalRuleTag extends @bbcode.Tag
     @STRIP_OUTER = true
 
   _toHTML: ->
-    ['<hr />']
+    '<hr />'
 
 class ListTag extends @bbcode.Tag
   constructor: ->
@@ -227,7 +228,7 @@ class LinkTag extends @bbcode.Tag
       @renderer.context {'linkify': false}, =>
         ["<a href=\"#{url}\" target=\"_blank\">", @getContent(), '</a>']
     else
-      [@getContent()]
+      @getContent()
 
 @bbcode.createSimpleTag = (name, attributes) =>
   class SimpleTag extends @bbcode.Tag

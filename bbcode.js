@@ -226,10 +226,16 @@
       return pieces.join('');
     };
     Tag.prototype._toHTML = function() {
-      return [this.toText(true)];
+      return this.toText(true);
     };
     Tag.prototype.toHTML = function() {
-      return this._toHTML().join('');
+      var pieces;
+      pieces = this._toHTML();
+      if (typeof pieces === 'string') {
+        return pieces;
+      } else {
+        return pieces.join('');
+      }
     };
     return Tag;
   })();
@@ -273,7 +279,7 @@
       if ('height' in this.params) {
         attributes['height'] = this.params['height'];
       }
-      return ["<img " + (this.renderer.htmlAttributes(attributes)) + " />"];
+      return "<img " + (this.renderer.htmlAttributes(attributes)) + " />";
     };
     return ImageTag;
   }).call(this);
@@ -287,8 +293,9 @@
       size = this.params['size'];
       if (isNaN(size)) {
         return this.getContent();
+      } else {
+        return ["<span style=\"font-size:" + size + "px\">", this.getContent(), '</span>'];
       }
-      return ["<span style=\"font-size:" + size + "px\">", this.getContent(), '</span>'];
     };
     return SizeTag;
   }).call(this);
@@ -300,10 +307,11 @@
     ColorTag.prototype._toHTML = function() {
       var color;
       color = this.params['color'];
-      if (!color) {
+      if (color != null) {
+        return ["<span style=\"color:" + color + "\">", this.getContent(), '</span>'];
+      } else {
         return this.getContent();
       }
-      return ["<span style=\"color:" + color + "\">", this.getContent(), '</span>'];
     };
     return ColorTag;
   }).call(this);
@@ -335,7 +343,7 @@
       this.STRIP_OUTER = true;
     }
     HorizontalRuleTag.prototype._toHTML = function() {
-      return ['<hr />'];
+      return '<hr />';
     };
     return HorizontalRuleTag;
   }).call(this);
@@ -414,7 +422,7 @@
           return ["<a href=\"" + url + "\" target=\"_blank\">", this.getContent(), '</a>'];
         }, this));
       } else {
-        return [this.getContent()];
+        return this.getContent();
       }
     };
     return LinkTag;
