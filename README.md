@@ -9,10 +9,14 @@ Ported from https://github.com/vishnevskiy/bbcodepy!
 Usage
 -----
 
+All common BBCode tags are supported by default.
+
 ``` html
 <script type="text/javascript" src="bbcode.min.js"></script>
 <script type="text/javascript">var html = new bbcode.Parser().toHTML('[b]Hello![/b]');</script>
 ```
+
+Add new tags using CoffeeScript's awesome syntax!
 
 ``` coffeescript
 var parser = @bbcode.Parser();
