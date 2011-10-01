@@ -104,7 +104,7 @@
   })();
 }).call(this);
 (function() {
-  var CenterTag, CodeTag, ColorTag, HorizontalRuleTag, ImageTag, LinkTag, ListItemTag, ListTag, QuoteTag, RightTag, SizeTag, createSimpleTag, _LINE_BREAK, _NEWLINE_RE;
+  var CenterTag, CodeTag, ColorTag, HorizontalRuleTag, ImageTag, LinkTag, ListItemTag, ListTag, QuoteTag, RightTag, SizeTag, _LINE_BREAK, _NEWLINE_RE;
   var __indexOf = Array.prototype.indexOf || function(item) {
     for (var i = 0, l = this.length; i < l; i++) {
       if (this[i] === item) return i;
@@ -419,7 +419,7 @@
     };
     return LinkTag;
   }).call(this);
-  createSimpleTag = function(name, attributes) {
+  this.bbcode.createSimpleTag = __bind(function(name, attributes) {
     var SimpleTag;
     return SimpleTag = (function() {
       __extends(SimpleTag, this.bbcode.Tag);
@@ -441,45 +441,45 @@
       };
       return SimpleTag;
     }).call(this);
-  };
+  }, this);
   this.bbcode.BUILTIN = {
-    b: createSimpleTag('strong'),
-    i: createSimpleTag('em'),
-    u: createSimpleTag('u'),
-    s: createSimpleTag('strike'),
-    h1: createSimpleTag('h1', {
+    b: this.bbcode.createSimpleTag('strong'),
+    i: this.bbcode.createSimpleTag('em'),
+    u: this.bbcode.createSimpleTag('u'),
+    s: this.bbcode.createSimpleTag('strike'),
+    h1: this.bbcode.createSimpleTag('h1', {
       STRIP_OUTER: true
     }),
-    h2: createSimpleTag('h2', {
+    h2: this.bbcode.createSimpleTag('h2', {
       STRIP_OUTER: true
     }),
-    h3: createSimpleTag('h3', {
+    h3: this.bbcode.createSimpleTag('h3', {
       STRIP_OUTER: true
     }),
-    h4: createSimpleTag('h4', {
+    h4: this.bbcode.createSimpleTag('h4', {
       STRIP_OUTER: true
     }),
-    h5: createSimpleTag('h5', {
+    h5: this.bbcode.createSimpleTag('h5', {
       STRIP_OUTER: true
     }),
-    h6: createSimpleTag('h6', {
+    h6: this.bbcode.createSimpleTag('h6', {
       STRIP_OUTER: true
     }),
-    pre: createSimpleTag('pre'),
-    table: createSimpleTag('table', {
+    pre: this.bbcode.createSimpleTag('pre'),
+    table: this.bbcode.createSimpleTag('table', {
       DISCARD_TEXT: true
     }),
-    thead: createSimpleTag('thead', {
+    thead: this.bbcode.createSimpleTag('thead', {
       DISCARD_TEXT: true
     }),
-    tbody: createSimpleTag('tbody', {
+    tbody: this.bbcode.createSimpleTag('tbody', {
       DISCARD_TEXT: true
     }),
-    tr: createSimpleTag('tr', {
+    tr: this.bbcode.createSimpleTag('tr', {
       DISCARD_TEXT: true
     }),
-    th: createSimpleTag('th'),
-    td: createSimpleTag('td'),
+    th: this.bbcode.createSimpleTag('th'),
+    td: this.bbcode.createSimpleTag('td'),
     code: CodeTag,
     img: ImageTag,
     hr: HorizontalRuleTag,

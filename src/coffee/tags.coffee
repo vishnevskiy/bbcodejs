@@ -229,7 +229,7 @@ class LinkTag extends @bbcode.Tag
     else
       [@getContent()]
 
-createSimpleTag = (name, attributes) ->
+@bbcode.createSimpleTag = (name, attributes) =>
   class SimpleTag extends @bbcode.Tag
     constructor: ->
       super
@@ -246,23 +246,23 @@ createSimpleTag = (name, attributes) ->
       return ["<#{name}#{htmlAttributes}>", @getContent(), "</#{name}>"]
 
 @bbcode.BUILTIN =
-  b: createSimpleTag('strong')
-  i: createSimpleTag('em')
-  u: createSimpleTag('u')
-  s: createSimpleTag('strike')
-  h1: createSimpleTag('h1', {STRIP_OUTER: true})
-  h2: createSimpleTag('h2', {STRIP_OUTER: true})
-  h3: createSimpleTag('h3', {STRIP_OUTER: true})
-  h4: createSimpleTag('h4', {STRIP_OUTER: true})
-  h5: createSimpleTag('h5', {STRIP_OUTER: true})
-  h6: createSimpleTag('h6', {STRIP_OUTER: true})
-  pre: createSimpleTag('pre')
-  table: createSimpleTag('table', {DISCARD_TEXT: true})
-  thead: createSimpleTag('thead', {DISCARD_TEXT: true})
-  tbody: createSimpleTag('tbody', {DISCARD_TEXT: true})
-  tr: createSimpleTag('tr', {DISCARD_TEXT: true})
-  th: createSimpleTag('th')
-  td: createSimpleTag('td')
+  b: @bbcode.createSimpleTag('strong')
+  i: @bbcode.createSimpleTag('em')
+  u: @bbcode.createSimpleTag('u')
+  s: @bbcode.createSimpleTag('strike')
+  h1: @bbcode.createSimpleTag('h1', {STRIP_OUTER: true})
+  h2: @bbcode.createSimpleTag('h2', {STRIP_OUTER: true})
+  h3: @bbcode.createSimpleTag('h3', {STRIP_OUTER: true})
+  h4: @bbcode.createSimpleTag('h4', {STRIP_OUTER: true})
+  h5: @bbcode.createSimpleTag('h5', {STRIP_OUTER: true})
+  h6: @bbcode.createSimpleTag('h6', {STRIP_OUTER: true})
+  pre: @bbcode.createSimpleTag('pre')
+  table: @bbcode.createSimpleTag('table', {DISCARD_TEXT: true})
+  thead: @bbcode.createSimpleTag('thead', {DISCARD_TEXT: true})
+  tbody: @bbcode.createSimpleTag('tbody', {DISCARD_TEXT: true})
+  tr: @bbcode.createSimpleTag('tr', {DISCARD_TEXT: true})
+  th: @bbcode.createSimpleTag('th')
+  td: @bbcode.createSimpleTag('td')
   code: CodeTag
   img: ImageTag
   hr: HorizontalRuleTag
