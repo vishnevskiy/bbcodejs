@@ -106,5 +106,5 @@ class window.BBCodeParser
 
     return root
 
-  toHTML: (bbcode, prettify=false) ->
+  toHTML: (bbcode) ->
     html = @parse(bbcode).toHTML()

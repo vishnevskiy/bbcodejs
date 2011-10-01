@@ -613,11 +613,8 @@
       }
       return root;
     };
-    BBCodeParser.prototype.toHTML = function(bbcode, prettify) {
+    BBCodeParser.prototype.toHTML = function(bbcode) {
       var html;
-      if (prettify == null) {
-        prettify = false;
-      }
       return html = this.parse(bbcode).toHTML();
     };
     return BBCodeParser;
