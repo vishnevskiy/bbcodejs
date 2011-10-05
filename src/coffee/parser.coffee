@@ -6,7 +6,7 @@ class @bbcode.Parser
   constructor: (allowedTags=null) ->
     @tags = {}
 
-    if not allowedTags
+    unless allowedTags
       for name, tag of bbcode.BUILTIN
         @registerTag(name, tag)
     else
