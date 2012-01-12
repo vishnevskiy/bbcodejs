@@ -1,4 +1,5 @@
-<link rel="stylesheet" href="http://twitter.github.com/bootstrap/1.3.0/bootstrap.min.css">
+<link rel="stylesheet" href="http://twitter.github.com/bootstrap/1.4.0/bootstrap.min.css">
+<textarea rows="10"  style="width:800px;margin: 50px 50px 0;"></textarea>
 <div id="html" style="margin:50px;"></div>
 <script id="bbcode" type="text/bbcode">[hr]
 [b]From[/b] [url=http://en.wikipedia.org/wiki/BBCode]Wikipedia[/url]
@@ -57,10 +58,17 @@ Hey you are a pretty [cool] dude, you know [/that?]
 
 http://www.guildwork.com/
 http://guildwork.com/forum/t/4e7668741d41c85c6a000002-asdsada?page=1&_=89f7#4e81892b1d41c84b1c000001</script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
 <script type="text/javascript" src="../src/js/bbcode.js"></script>
 <script type="text/javascript" src="../src/js/renderer.js"></script>
 <script type="text/javascript" src="../src/js/tags.js"></script>
 <script type="text/javascript" src="../src/js/parser.js"></script>
+<script type="text/javascript" src="../src/js/editor.js"></script>
 <script type="text/javascript" >
-    document.getElementById('html').innerHTML =  new bbcode.Parser().toHTML(document.getElementById('bbcode').innerHTML);
+    var editor = new bbcode.Editor('textarea');
+    editor.setValue(document.getElementById('bbcode').innerHTML);
+    editor.$.on('keyup', function() {
+        document.getElementById('html').innerHTML = new bbcode.Parser().toHTML(editor.textarea.value);
+    });
+    editor.$.trigger('keyup');
 </script>

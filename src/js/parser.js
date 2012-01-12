@@ -1,20 +1,18 @@
 (function() {
-  var _SPACE_RE, _START_NEWLINE_RE, _TOKEN_RE;
-  var __indexOf = Array.prototype.indexOf || function(item) {
-    for (var i = 0, l = this.length; i < l; i++) {
-      if (this[i] === item) return i;
-    }
-    return -1;
-  };
+  var _SPACE_RE, _START_NEWLINE_RE, _TOKEN_RE,
+    __indexOf = Array.prototype.indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
+
   _SPACE_RE = /^\s*$/;
+
   _TOKEN_RE = /(\[\/?.+?\])/;
+
   _START_NEWLINE_RE = /^\r?\n/;
+
   this.bbcode.Parser = (function() {
+
     function Parser(allowedTags) {
       var name, tag, _i, _len, _ref;
-      if (allowedTags == null) {
-        allowedTags = null;
-      }
+      if (allowedTags == null) allowedTags = null;
       this.tags = {};
       if (!allowedTags) {
         _ref = bbcode.BUILTIN;
@@ -32,9 +30,11 @@
       }
       this.renderer = new bbcode.Renderer();
     }
+
     Parser.prototype.registerTag = function(name, tag) {
       return this.tags[name] = tag;
     };
+
     Parser.prototype._parseParams = function(token) {
       var c, key, params, skipNext, target, terminate, value, _i, _len;
       params = [];
@@ -55,9 +55,7 @@
             target.push(c);
           } else {
             params.push([key.join('').toLowerCase(), value.join('')]);
-            if (!_SPACE_RE.test(terminate)) {
-              skipNext = true;
-            }
+            if (!_SPACE_RE.test(terminate)) skipNext = true;
             target = key = [];
             value = [];
             terminate = ' ';
@@ -67,6 +65,7 @@
       }
       return params;
     };
+
     Parser.prototype._createTextNode = function(parent, text) {
       var _ref;
       if ((_ref = parent.children.slice(-1)[0]) != null ? _ref.STRIP_OUTER : void 0) {
@@ -77,6 +76,7 @@
         parent: parent
       });
     };
+
     Parser.prototype.parse = function(input) {
       var cls, current, params, root, tag, tagName, token, tokens;
       current = root = new bbcode.Tag(this.renderer);
@@ -97,9 +97,7 @@
               this._createTextNode(current, token);
               continue;
             }
-            if (current.name === tagName) {
-              current = current.parent;
-            }
+            if (current.name === tagName) current = current.parent;
           } else {
             cls = this.tags[tagName];
             if (!cls) {
@@ -121,10 +119,14 @@
       }
       return root;
     };
+
     Parser.prototype.toHTML = function(input) {
       var html;
       return html = this.parse(input).toHTML();
     };
+
     return Parser;
+
   })();
+
 }).call(this);
