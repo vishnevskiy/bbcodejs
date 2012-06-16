@@ -201,6 +201,8 @@ class @bbcode.Editor
     value = @textarea.value
 
     if document.selection?.createRange?
+      selection = document.selection
+
       if !/testarea/i.test @textarea.tagName
         range = selection.createRange().duplicate()
         range.moveEnd 'character', value.length
@@ -210,7 +212,7 @@ class @bbcode.Editor
         range = selection.createRange().duplicate()
         range.moveStart 'character', -value.length
 
-        end = range.text.length
+        end = range.text.length + 1
       else
           range = selection.createRange()
 
