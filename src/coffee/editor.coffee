@@ -136,7 +136,7 @@ class @bbcode.Editor
           selection.start--
 
         @select selection.start, selection.end + offset
-      else if !e.ctrlKey || !@getRule(e.which)?
+      else if !e.ctrlKey || e.altKey || !@getRule(e.which)?
         return true
       else
         @replace e.which
