@@ -1,6 +1,8 @@
 _NEWLINE_RE = /\r?\n/g
 _LINE_BREAK = '<br />'
 
+bbcode = @bbcode;
+
 class @bbcode.Tag
   constructor: (@renderer, settings={}) ->
     @CLOSED_BY = []

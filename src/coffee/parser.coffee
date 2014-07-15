@@ -2,6 +2,8 @@ _SPACE_RE = /^\s*$/
 _TOKEN_RE = /(\[\/?.+?\])/
 _START_NEWLINE_RE = /^\r?\n/
 
+bbcode = @bbcode;
+
 class @bbcode.Parser
   constructor: (allowedTags=null) ->
     @tags = {}
