@@ -1,6 +1,6 @@
 {
   "name": "bbcodejs",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "BBCODE.JS =========",
   "main": "bbcode.js",
   "directories": {
@@ -13,7 +13,14 @@
     "type": "git",
     "url": "https://github.com/vishnevskiy/bbcodejs.git"
   },
-  "author": "vishnevskiy",
+  "authors": [
+	{
+		url: "https://github.com/vishnevskiy"
+	},
+	{
+		url: "https://github.com/akhoury",
+	}
+  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/vishnevskiy/bbcodejs/issues"

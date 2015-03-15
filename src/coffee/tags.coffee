@@ -223,8 +223,6 @@ class LinkTag extends @bbcode.Tag
 
     if /javascript:/i.test(url)
       url = ''
-    else if  not /:/.test(url)
-      url = 'http://' + url
 
     if url
       @renderer.context {'linkify': false}, =>

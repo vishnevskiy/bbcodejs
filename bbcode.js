@@ -491,8 +491,6 @@
       url = this.renderer.strip(this.params[this.name] || this.getContent(true));
       if (/javascript:/i.test(url)) {
         url = '';
-      } else if (!/:/.test(url)) {
-        url = 'http://' + url;
       }
       if (url) {
         return this.renderer.context({
