@@ -35,6 +35,8 @@ class @bbcode.Parser
           skipNext = false
         else if target is key and c is '='
           target = value
+        else if target is key and c is ':'
+          target = value
         else if not value.length and c is '"'
           terminate = c
         else if c isnt terminate
