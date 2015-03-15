@@ -15,10 +15,10 @@
   },
   "authors": [
 	{
-		url: "https://github.com/vishnevskiy"
+		"url": "https://github.com/vishnevskiy"
 	},
 	{
-		url: "https://github.com/akhoury"
+		"url": "https://github.com/akhoury"
 	}
   ],
   "license": "MIT",
