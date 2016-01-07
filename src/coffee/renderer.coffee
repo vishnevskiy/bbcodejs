@@ -20,10 +20,11 @@ _COSMETIC_RE = new RegExp((key.replace(/(\.|\)|\()/g, '\\$1') for key of _COSMET
 bbcode = @bbcode;
 
 class @bbcode.Renderer
-  constructor: ->
+  constructor: (options) ->
+    options = options || {}
     @_contexts = []
     @options =
-      linkify: true
+      linkify: !!options.linkify
 
   context: (context, func) ->
     newOptions = {}
