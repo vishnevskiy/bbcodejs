@@ -44,11 +44,13 @@
   bbcode = this.bbcode;
 
   this.bbcode.Renderer = (function() {
-    function Renderer() {
-      this._contexts = [];
-      this.options = {
-        linkify: true
-      };
+    function Renderer(options) {
+    	options = options || {};
+
+		this._contexts = [];
+      	this.options = {
+        	linkify: !!options.linkify
+      	};
     }
 
     Renderer.prototype.context = function(context, func) {
