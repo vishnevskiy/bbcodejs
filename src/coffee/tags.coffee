@@ -1,6 +1,8 @@
 _NEWLINE_RE = /\r?\n/g
 _LINE_BREAK = '<br />'
 
+bbcode = @bbcode;
+
 class @bbcode.Tag
   constructor: (@renderer, settings={}) ->
     @CLOSED_BY = []
@@ -221,8 +223,6 @@ class LinkTag extends @bbcode.Tag
 
     if /javascript:/i.test(url)
       url = ''
-    else if  not /:/.test(url)
-      url = 'http://' + url
 
     if url
       @renderer.context {'linkify': false}, =>

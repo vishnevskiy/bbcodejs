@@ -2,6 +2,8 @@ _SPACE_RE = /^\s*$/
 _TOKEN_RE = /(\[\/?.+?\])/
 _START_NEWLINE_RE = /^\r?\n/
 
+bbcode = @bbcode;
+
 class @bbcode.Parser
   constructor: (allowedTags=null) ->
     @tags = {}
@@ -32,6 +34,8 @@ class @bbcode.Parser
         if skipNext
           skipNext = false
         else if target is key and c is '='
+          target = value
+        else if target is key and c is ':'
           target = value
         else if not value.length and c is '"'
           terminate = c

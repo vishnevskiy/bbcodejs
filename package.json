@@ -1,0 +1,29 @@
+{
+  "name": "bbcodejs",
+  "version": "0.0.4",
+  "description": "BBCODE.JS =========",
+  "main": "bbcode.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vishnevskiy/bbcodejs.git"
+  },
+  "authors": [
+	{
+		"url": "https://github.com/vishnevskiy"
+	},
+	{
+		"url": "https://github.com/akhoury"
+	}
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/vishnevskiy/bbcodejs/issues"
+  },
+  "homepage": "https://github.com/vishnevskiy/bbcodejs"
+}

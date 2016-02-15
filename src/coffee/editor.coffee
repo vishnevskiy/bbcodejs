@@ -1,3 +1,5 @@
+bbcode = @bbcode;
+
 MARKUP =
   bold: # b
     keyCode: 66
